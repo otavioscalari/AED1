@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void insertionSort(int vet[], int tamanho_vet) {
+    int i, j, item, min;
+
+    for (i = 0; i < tamanho_vet - 1; i++) {
+        min = i;
+
+        for (j = i + 1; j < tamanho_vet; j++) {
+            if (vet[j] < vet[min]) {
+                min = j;
+            }
+        }
+
+        item = vet[i];
+        vet[i] = vet[min];
+        vet[min] = item;
+    }
+}
+
+int main() {
+    const int tamanho = 50000;
+    int i, j, k, cont_execucoes = 3, cont_escala = 8;
+    int vet[tamanho * cont_escala];
+    clock_t inicio, fim;
+    double tempo_gasto = 0, tempo_medio = 0;
+
+    srand(time(NULL));
+
+    for (i = 0; i < cont_escala; i++) {
+        printf("Tamanho do vetor: %d\n\n", (tamanho*i));
+
+        for (j = 0; j < cont_execucoes; j++) {
+            for (k = 0; k < (tamanho * i); k++) {
+                vet[k] = rand() % 101;
+            }
+
+            inicio = clock();
+
+            insertionSort(vet, (tamanho * i));
+
+            fim = clock();
+
+            tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
+            tempo_medio += tempo_gasto;
+
+            printf("Tempo execucao %d: %f\n\n", j + 1, tempo_gasto);
+        }
+
+        tempo_medio /= cont_execucoes;
+
+        printf("Tempo medio: %f\n\n", tempo_medio);
+    }
+}
